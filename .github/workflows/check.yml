@@ -1,0 +1,33 @@
+# The board's checker (ADR-0018): this file is .github/workflows/check.yml in
+# the public repository mrgedune/critical-response-checks, beside check.mjs.
+# Public repositories get their Actions minutes free. The job's own GitHub
+# token (id-token) is how the board knows its verdicts are the checker's.
+name: check
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [check]
+permissions:
+  contents: write # to keep each build's check module in builds/
+  id-token: write # the token the board checks
+concurrency:
+  group: check
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node check.mjs
+      - name: Keep the builds
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A builds
+          git diff --cached --quiet || (git commit -m 'Keep the builds checked' && git push)
