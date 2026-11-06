@@ -1,0 +1,7 @@
+Copyright © 2026 Rabbit House Games. All rights reserved.
+
+This repository is public so that anyone can see how the board of Liminal
+Protocol: Critical Response checks a record. Public is not open source: no licence
+is granted to copy, modify, distribute or reuse the checker or the check modules
+in builds/, which are the game's simulation, beyond what GitHub's terms allow for
+viewing a public repository.
